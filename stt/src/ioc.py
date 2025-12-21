@@ -1,11 +1,10 @@
 from typing import Any, AsyncIterable
 
+from config import Config
 from dishka import Provider, Scope, from_context, provide
 from faststream.rabbit import RabbitBroker
-from redis.asyncio import Redis
-
-from config import Config
 from infrastructure.redis import new_redis_client
+from redis.asyncio import Redis
 
 
 class AppProvider(Provider):
@@ -14,7 +13,7 @@ class AppProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     async def get_redis_conn(self, config: Config) -> AsyncIterable[Redis[Any]]:
-        conn = await new_redis_client(config.redis)
+        conn = new_redis_client(config.redis)
         try:
             yield conn
         finally:
