@@ -1,0 +1,20 @@
+[project]
+name = "command"
+version = "0.1.0"
+description = """
+Command Service is an asynchronous microservice responsible for producing
+and dispatching structured commands into RabbitMQ. It leverages FastStream
+for message publishing, Dishka for dependency injection and modular design,
+and Pydantic for strict DTO validation. Uvicorn provides a lightweight
+runtime for exposing APIs and integrations. This service acts as the entry
+point for generating commands that downstream services (such as Device
+Gateway) consume and execute.
+"""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dishka>=1.7.2",
+    "faststream[rabbit]>=0.6.4",
+    "pydantic>=2.12.5",
+    "uvicorn>=0.39.0",
+]

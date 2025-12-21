@@ -1,0 +1,22 @@
+[project]
+name = "stt"
+version = "0.1.0"
+description = """
+STT Service is an asynchronous microservice for speech-to-text processing.
+It leverages OpenAI Whisper for accurate transcription, Pydub for audio
+manipulation, and FastStream with RabbitMQ for message exchange. Dishka
+provides dependency injection and modular design, while Pydantic enforces
+strict DTO validation. Uvicorn serves as the runtime for exposing APIs and
+integrations. This service acts as the audio input layer, converting voice
+commands into structured text for downstream services such as NLU and
+Command.
+"""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dishka>=1.7.2",
+    "faststream[rabbit]>=0.6.4",
+    "openai-whisper>=20250625",
+    "pydub>=0.25.1",
+    "uvicorn>=0.39.0",
+]

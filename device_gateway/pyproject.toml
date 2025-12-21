@@ -1,0 +1,21 @@
+[project]
+name = "device-gateway"
+version = "0.1.0"
+description = """
+Device Gateway is an asynchronous microservice for managing IoT devices.
+It consumes commands from RabbitMQ, forwards them to an MQTT broker, and
+persists device states and events in PostgreSQL. The service leverages
+FastStream for queue handling, gmqtt for IoT communication, psycopg for
+database integration, and Pydantic for strict DTO validation. Uvicorn
+provides a lightweight runtime for exposing APIs and integrations.
+"""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.13.2",
+    "faststream[rabbit]>=0.6.4",
+    "gmqtt>=0.7.0",
+    "psycopg>=3.3.2",
+    "pydantic>=2.12.5",
+    "uvicorn>=0.39.0",
+]

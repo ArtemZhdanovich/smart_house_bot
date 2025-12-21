@@ -1,0 +1,20 @@
+[project]
+name = "bot"
+version = "0.1.0"
+description = """
+Bot Service is an asynchronous microservice that provides a user-facing
+interface for interacting with the system through Telegram. It leverages
+Aiogram for building conversational flows, Dishka for dependency injection
+and modular design, FastStream for publishing and consuming messages via
+RabbitMQ, and Psycopg for persisting user data and events in PostgreSQL.
+This service acts as the communication layer, bridging end users with the
+backend command and device services.
+"""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.23.0",
+    "dishka>=1.7.2",
+    "faststream[rabbit]>=0.6.4",
+    "psycopg>=3.3.2",
+]

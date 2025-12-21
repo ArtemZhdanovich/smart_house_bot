@@ -1,0 +1,24 @@
+[project]
+name = "webapp"
+version = "0.1.0"
+description = """
+WebApp Service is an asynchronous microservice that provides a web-based
+interface and RESTful APIs for interacting with the IoT system. It is built
+on FastAPI for high-performance HTTP endpoints, integrates with RabbitMQ
+via FastStream for event-driven communication, and uses Psycopg for
+persistent storage in PostgreSQL. Dishka ensures modular dependency
+injection, while Pydantic enforces strict DTO validation. Uvicorn serves
+as the runtime for hosting the application. This service acts as the
+presentation layer, enabling users and external systems to access and
+control backend services through a secure and scalable web interface.
+"""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dishka>=1.7.2",
+    "fastapi>=0.126.0",
+    "faststream[rabbit]>=0.6.4",
+    "psycopg>=3.3.2",
+    "pydantic>=2.12.5",
+    "uvicorn>=0.39.0",
+]
