@@ -11,3 +11,5 @@ wheels/
 
 .env
 .mypy_cache
+.vscode
+.ruff_cache
