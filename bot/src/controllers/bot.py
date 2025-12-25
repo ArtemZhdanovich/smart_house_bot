@@ -42,16 +42,22 @@ class BotControllers:
         chat: FromDishka[Chat | None],
         voice_interactor: FromDishka[VoiceCommandInteractor],
         text_interactor: FromDishka[TextCommandInteractor],
-        state: FSMContext
+        state: FSMContext,
     ) -> None:
+        chat_id = chat.id if chat else None
+        user_id = user.id if user else None
+        message_id = message.message_id
         if message.voice:
-            chat_id = chat.id if chat else None
-            await voice_interactor(
-                user.id , chat_id , message.voice
-            )
+            if user_id is None:
+                await message.answer("Неизвестный отправитель")
+                return
+            await voice_interactor(user_id, message_id, chat_id, message.voice)
             await message.answer("Голосовая команда отправлена ✅")
         elif message.text:
-            await text_interactor(user.id, message.message_id)
+            if user_id is None:
+                await message.answer("Неизвестный отправитель")
+                return
+            await text_interactor(user_id, message_id, chat_id)
             await message.answer("Текстовая команда отправлена ✅")
         else:
             await message.answer("Поддерживаются только текст и голос 🎤")

@@ -19,7 +19,12 @@ class TextCommandInteractor:
     def __init__(self, broker):
         self._broker = broker
 
-    async def __call__(self, user_id: str | int, message_id: str | int | None) -> None:
+    async def __call__(
+        self, 
+        user_id: str | int, 
+        message_id: str | int | None,
+        chat_id: str | int | None, 
+        ) -> None:
         dto = CommandDTO(
             user_id=str(user_id), 
             message_id=str(message_id) if message_id else None)
@@ -38,7 +43,8 @@ class VoiceCommandInteractor:
     async def __call__(
         self, 
         user_id: str | int, 
-        message_id: str | int | None, 
+        message_id: str | int | None,
+        chat_id: str | int | None,
         voice: Voice
     ) -> None:
         audio_bytes_io = await self._bot.download(voice)

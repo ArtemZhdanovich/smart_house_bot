@@ -22,7 +22,7 @@ class BotProvider(Provider):
             self,
             middleware_data: AiogramMiddlewareData,
     ) -> Chat | None:
-        return middleware_data.get("bot")
+        return middleware_data.get("chat")
 
     @provide(scope=Scope.REQUEST) 
     async def get_user(self, message: Message) -> User | None: 

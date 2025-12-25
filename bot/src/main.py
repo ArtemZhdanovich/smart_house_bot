@@ -17,26 +17,31 @@ config = Config()
 
 
 async def main(
-    config: Config, 
-    router: Router, 
+    config: Config,
+    router: Router,
 ) -> None:
     bot = Bot(token=config.bot.token)
     broker = new_broker(config.rabbit)
+
     dp = Dispatcher()
     dp.include_router(router)
+
     container = make_async_container(
         BotProvider(),
         AiogramProvider(),
         context={
             Config: config,
             RabbitBroker: broker,
-            Router: router
-        }
+            Router: router,
+        },
     )
     setup_dishka(container=container, router=dp)
+
     try:
+        await broker.start()
         await dp.start_polling(bot)
     finally:
+        await broker.stop()
         await container.close()
         await bot.session.close()
 
