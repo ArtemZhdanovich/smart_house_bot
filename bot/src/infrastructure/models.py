@@ -1,6 +1,6 @@
-from datetime import datetime, timezone
 import enum
 import uuid
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     JSON,
@@ -15,7 +15,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
-from infrastructure.adapters.db import Base
+from infrastructure.adapters.postgres import Base
 
 
 class HomeRole(enum.Enum):

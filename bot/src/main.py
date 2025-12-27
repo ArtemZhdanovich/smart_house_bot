@@ -11,7 +11,6 @@ from faststream.rabbit import RabbitBroker
 from infrastructure.adapters.rabbit import new_broker
 from ioc import BotProvider
 
-
 router = Router()
 config = Config()
 

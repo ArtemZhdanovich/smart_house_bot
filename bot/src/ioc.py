@@ -5,10 +5,10 @@ from aiogram import Router
 from aiogram.types import Chat, Message, User
 from application import interfaces
 from config import Config
-from dishka import Provider, Scope, from_context, provide
+from dishka import AnyOf, Provider, Scope, from_context, provide
 from dishka.integrations.aiogram import AiogramMiddlewareData
 from faststream.rabbit import RabbitBroker
-from infrastructure.adapters.db import new_session_maker
+from infrastructure.adapters.postgres import new_session_maker
 from infrastructure.adapters.redis import new_redis_client
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -45,7 +45,7 @@ class BotProvider(Provider):
     @provide(scope=Scope.REQUEST)
     async def get_session(
         self, session_maker: async_sessionmaker[AsyncSession]
-    ) -> AsyncIterable[AsyncSession]:
+    ) -> AsyncIterable[AnyOf[AsyncSession, interfaces.SessionProtocol]]:
         async with session_maker() as session:
             yield session
 
