@@ -19,7 +19,7 @@ class TelegramUserRepositorySQL(TelegramUserRepositoryProtocol):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def add(
+    async def create(
         self,
         dm: TelegramUserEntity
     ) -> uuid.UUID:
@@ -60,7 +60,7 @@ class TelegramUserRepositorySQL(TelegramUserRepositoryProtocol):
         except SQLAlchemyError as e:
             raise DomainError("Database error while adding user") from e
 
-    async def get(
+    async def read(
         self,
         *,
         id: uuid.UUID | None = None,
@@ -88,7 +88,7 @@ class TelegramUserRepositorySQL(TelegramUserRepositoryProtocol):
             """
             params["username"] = username
         else:
-            raise ValueError("Нужно указать хотя бы один уникальный ключ")
+            raise ValueError("You must specify at least one unique key.")
         if lock is not None:
             if lock == "update":
                 query += " FOR UPDATE"

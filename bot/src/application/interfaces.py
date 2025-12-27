@@ -46,13 +46,13 @@ class TelegramUserRepositoryProtocol(Protocol):
     def __init__(self, session: SessionProtocol) -> None:
         ...
 
-    async def add(
+    async def create(
         self,
         dm: TelegramUserEntity
     ) -> UUID:
         ...
 
-    async def get(
+    async def read(
         self,
         *,
         id: UUID | None = None,

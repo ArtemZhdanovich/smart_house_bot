@@ -44,7 +44,7 @@ class BotControllers:
             first_name=user.first_name,
             last_name=user.last_name
         ))
-        await message.answer("Отправь команду текстом или голосом 🎤")
+        await message.answer("Send a command by text or voice🎤")
         await state.set_state(CommandState.waiting_for_command)
 
     async def command_handler(
@@ -71,12 +71,12 @@ class BotControllers:
                 user_id, message_id, chat_id, 
                 voice=audio_bytes_io, mime_type=mime_type
             ))
-            await message.answer("Голосовая команда отправлена ✅")
+            await message.answer("Voice command sent ✅")
         elif text := message.text:
             await text_interactor(CommandInputDTO(
                 user_id, message_id, chat_id, text=text
             ))
-            await message.answer("Текстовая команда отправлена ✅")
+            await message.answer("Text command sent ✅")
         else:
             await message.answer("Only text and voice are supported 🎤")
 
