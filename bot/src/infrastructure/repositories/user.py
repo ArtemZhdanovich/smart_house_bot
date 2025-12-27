@@ -1,14 +1,14 @@
 import uuid
 
 from sqlalchemy import RowMapping, text
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class TelegramUserRepositorySQL:
-    def __init__(self, session: Session):
+    def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    def add(
+    async def add(
         self, 
         telegram_id: int, 
         username: str | None = None,
@@ -32,17 +32,17 @@ class TelegramUserRepositorySQL:
                 :last_name
             )
         """)
-        self.session.execute(stmt, {
+        await self.session.execute(stmt, {
             "id": user_id,
             "telegram_id": telegram_id,
             "username": username,
             "first_name": first_name,
             "last_name": last_name,
         })
-        self.session.commit()
+        await self.session.commit()
         return user_id
 
-    def get(
+    async def get(
         self,
         *, 
         id: uuid.UUID | None = None,
@@ -54,37 +54,53 @@ class TelegramUserRepositorySQL:
                 SELECT * FROM telegram_users 
                 WHERE id = :id
             """)
-            result = self.session.execute(stmt, {"id": id})
+            result = await self.session.execute(stmt, {"id": id})
             return result.mappings().first()
         if telegram_id is not None:
             stmt = text("""
                 SELECT * FROM telegram_users 
                 WHERE telegram_id = :telegram_id
             """)
-            result = self.session.execute(stmt, {"telegram_id": telegram_id})
+            result = await self.session.execute(stmt, {"telegram_id": telegram_id})
             return result.mappings().first()
         if username is not None:
             stmt = text("""
                 SELECT * FROM telegram_users 
                 WHERE username = :username
             """)
-            result = self.session.execute(stmt, {"username": username})
+            result = await self.session.execute(stmt, {"username": username})
             return result.mappings().first()
         raise ValueError("Нужно указать хотя бы один уникальный ключ")
 
-    def update_username(self, telegram_id: int, username: str) -> None:
+    async def update_user_info(
+        self, 
+        telegram_id: int, 
+        username: str | None, 
+        first_name: str | None, 
+        last_name: str | None
+    ) -> None:
         stmt = text("""
-            UPDATE telegram_users 
-            SET username = :username 
+            UPDATE telegram_users
+            SET username = :username,
+                first_name = :first_name,
+                last_name = :last_name
             WHERE telegram_id = :telegram_id
         """)
-        self.session.execute(stmt, {"username": username, "telegram_id": telegram_id})
-        self.session.commit()
+        await self.session.execute(
+            stmt,
+            {
+                "username": username,
+                "first_name": first_name,
+                "last_name": last_name,
+                "telegram_id": telegram_id,
+            }
+        )
+        await self.session.commit()
 
-    def delete(self, telegram_id: int) -> None:
+    async def delete(self, telegram_id: int) -> None:
         stmt = text("""
             DELETE FROM telegram_users 
             WHERE telegram_id = :telegram_id
         """)
-        self.session.execute(stmt, {"telegram_id": telegram_id})
-        self.session.commit()
+        await self.session.execute(stmt, {"telegram_id": telegram_id})
+        await self.session.commit()

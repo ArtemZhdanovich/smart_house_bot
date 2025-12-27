@@ -8,8 +8,10 @@ from config import Config
 from dishka import Provider, Scope, from_context, provide
 from dishka.integrations.aiogram import AiogramMiddlewareData
 from faststream.rabbit import RabbitBroker
+from infrastructure.adapters.db import new_session_maker
 from infrastructure.adapters.redis import new_redis_client
 from redis.asyncio import Redis
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 
 class BotProvider(Provider):
@@ -35,6 +37,17 @@ class BotProvider(Provider):
             yield conn
         finally:
             await conn.close()
+
+    @provide(scope=Scope.APP)
+    def get_session_maker(self, config: Config) -> async_sessionmaker[AsyncSession]:
+        return new_session_maker(config.postgres)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_session(
+        self, session_maker: async_sessionmaker[AsyncSession]
+    ) -> AsyncIterable[AsyncSession]:
+        async with session_maker() as session:
+            yield session
 
     @provide(interfaces.UUIDGenerator, scope=Scope.APP)
     def get_uuid(self) -> UUID:
