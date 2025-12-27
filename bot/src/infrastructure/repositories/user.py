@@ -85,7 +85,7 @@ class TelegramUserRepositorySQL(TelegramUserRepositoryProtocol):
             query = """
                 SELECT * FROM telegram_users 
                 WHERE username = :username
-            s"""
+            """
             params["username"] = username
         else:
             raise ValueError("Нужно указать хотя бы один уникальный ключ")

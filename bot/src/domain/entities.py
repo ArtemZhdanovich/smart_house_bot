@@ -67,7 +67,7 @@ class SmartDeviceEntity:
     custom_settings: dict[str, Any] | None
     ip_address: str | None
     mac_address: str | None
-    battery_level: str | None
+    battery_level: int | None
     connectivity: str | None
     status: str | None
     last_error: str | None

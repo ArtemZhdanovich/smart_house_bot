@@ -68,33 +68,25 @@ class BotProvider(Provider):
         provides=interfaces.MessageCacheProtocol
     )
 
-    user_repo = provide(
-        source=TelegramUserRepositorySQL,
-        scope=Scope.APP,
-        provides=interfaces.TelegramUserRepositoryProtocol
-    )
+    @provide(interfaces.TelegramUserRepositoryProtocol, scope=Scope.REQUEST)
+    def get_user_repo(self) -> type[TelegramUserRepositorySQL]:
+        return TelegramUserRepositorySQL
 
-    home_user_role_repo = provide(
-        source=HomeUserRoleRepositorySQL,
-        scope=Scope.APP,
-        provides=interfaces.HomeUserRoleRepositoryProtocol
-    )
+    @provide(interfaces.HomeUserRoleRepositoryProtocol, scope=Scope.REQUEST)
+    def get_home_user_role_repo(self) -> type[HomeUserRoleRepositorySQL]:
+        return HomeUserRoleRepositorySQL
 
-    home_repo = provide(
-        source=HomeRepositorySQL,
-        scope=Scope.APP,
-        provides=interfaces.HomeRepositoryProtocol
-    )
-
-    smart_device_repo = provide(
-        source=SmartDeviceRepositorySQL,
-        scope=Scope.APP,
-        provides=interfaces.SmartDeviceRepositoryProtocol
-    )
+    @provide(interfaces.HomeRepositoryProtocol, scope=Scope.REQUEST)
+    def get_home_repo(self) -> type[HomeRepositorySQL]:
+        return HomeRepositorySQL
+    
+    @provide(interfaces.SmartDeviceRepositoryProtocol, scope=Scope.REQUEST)
+    def get_smart_device_repo(self) -> type[SmartDeviceRepositorySQL]:
+        return SmartDeviceRepositorySQL
 
     uow_adapter = provide(
-        source=UnitOfWork,
-        scope=Scope.APP,
+        source=UnitOfWork, 
+        scope=Scope.REQUEST, 
         provides=interfaces.UnitOfWorkProtocol
     )
 
