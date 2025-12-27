@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:18.0
+    container_name: smart-home-postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./backups/pg_data:/var/lib/postgresql/18/main
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "PGPASSWORD=${DB_PASS} pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.2.2
+    container_name: smart-home-redis
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASS}
+      - REDIS_USER=${REDIS_USER}
+      - REDIS_USER_PASSWORD=${REDIS_USER_PASS}
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./backups/redis_data:/data
+    command: >
+      sh -c '
+        mkdir -p /usr/local/etc/redis &&
+        echo "bind 0.0.0.0" > /usr/local/etc/redis/redis.conf &&
+        echo "requirepass ${REDIS_PASS}" >> /usr/local/etc/redis/redis.conf &&
+        echo "appendonly yes" >> /usr/local/etc/redis/redis.conf &&
+        echo "appendfsync everysec" >> /usr/local/etc/redis/redis.conf &&
+        echo "user default on nopass ~* +@all" > /usr/local/etc/redis/users.acl &&
+        echo "user ${REDIS_USER} on >${REDIS_USER_PASS} ~* +@all" >> /usr/local/etc/redis/users.acl &&
+        redis-server /usr/local/etc/redis/redis.conf --aclfile /usr/local/etc/redis/users.acl
+      '
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASS}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  rabbitmq:
+    image: rabbitmq:4.2.0-management
+    container_name: smart-home-rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${MQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${MQ_PASS}
+    ports:
+      - "${MQ_PORT}:5672"
+      - "${MQ_MANAGEMENT_PORT}:15672"
+    volumes:
+      - ./backups/rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped

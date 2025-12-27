@@ -25,7 +25,7 @@ class FirstTouchInteractor:
             first_name=dto.first_name,
             last_name=dto.last_name
         )
-        await self._uow.users.add(dm)
+        await self._uow.users.create(dm)
 
 
 class VoiceCommandInteractor:

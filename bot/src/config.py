@@ -4,26 +4,26 @@ from pydantic import BaseModel, Field
 
 
 class RabbitMQConfig(BaseModel):
-    host: str = Field(alias="RABBITMQ_HOST")
-    port: int = Field(alias="RABBITMQ_PORT")
-    login: str = Field(alias="RABBITMQ_USER")
-    password: str = Field(alias="RABBITMQ_PASSWORD")
-    vhost: str = Field(alias="RABBITMQ_VHOST")
+    host: str = Field(alias="MQ_HOST")
+    port: int = Field(alias="MQ_PORT")
+    login: str = Field(alias="MQ_USER")
+    password: str = Field(alias="MQ_PASS")
+    vhost: str = Field(alias="MQ_VHOST")
 
 
 class RedisConfig(BaseModel):
     host: str = Field(alias="REDIS_HOST")
     port: int = Field(alias="REDIS_PORT")
-    db: int = Field(alias="REDIS_ACCOUNT_EVENTS_DB")
-    password: str = Field(alias="REDIS_PASSWORD")
+    db: int = Field(alias="REDIS_DB")
+    password: str = Field(alias="REDIS_PASS")
 
 
 class PostgresConfig(BaseModel):
-    host: str = Field(alias="POSTGRES_HOST")
-    port: int = Field(alias="POSTGRES_PORT")
-    login: str = Field(alias="POSTGRES_USER")
-    password: str = Field(alias="POSTGRES_PASSWORD")
-    database: str = Field(alias="POSTGRES_DB")
+    host: str = Field(alias="DB_HOST")
+    port: int = Field(alias="DB_PORT")
+    login: str = Field(alias="DB_USER")
+    password: str = Field(alias="DB_PASS")
+    database: str = Field(alias="DB_NAME")
 
 
 class BotConfig(BaseModel):
