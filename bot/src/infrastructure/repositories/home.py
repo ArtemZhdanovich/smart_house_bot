@@ -1,6 +1,7 @@
 import uuid
 from typing import Literal
 
+from application.interfaces import HomeRepositoryProtocol
 from domain.entities import HomeEntity
 from domain.errors import (
     DomainError,
@@ -14,7 +15,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-class HomeRepositorySQL:
+class HomeRepositorySQL(HomeRepositoryProtocol):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
